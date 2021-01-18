@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "465691865043",
+    "project_id": "graduationproject2-f3168",
+    "storage_bucket": "graduationproject2-f3168.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465691865043:android:d7c3b3a8c427bac0aa4926",
+        "android_client_info": {
+          "package_name": "ibrayahy.graduation_project_2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "465691865043-30sg8m0es42a61iouukng6oecl9gca1o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAt1s2ZfPL6RTZQjxci9ug4PjL0U6RixwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "465691865043-30sg8m0es42a61iouukng6oecl9gca1o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
