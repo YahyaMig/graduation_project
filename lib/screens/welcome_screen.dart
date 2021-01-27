@@ -6,6 +6,7 @@ import 'package:graduation_project_2/screens/registration_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String id = 'welcome_screen';
+  static bool isStudent = false;
 
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
@@ -84,6 +85,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 textValue: 'Log in',
                 color: Colors.lightBlueAccent,
                 onPressed: () {
+                  WelcomeScreen.isStudent = true;
                   Navigator.pushNamed(context, LoginScreen.id);
                 },
               ),
@@ -94,6 +96,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 textValue: 'Register',
                 color: Colors.blueAccent,
                 onPressed: () {
+                  WelcomeScreen.isStudent = false;
                   Navigator.pushNamed(context, RegistrationScreen.id);
                 },
               ),

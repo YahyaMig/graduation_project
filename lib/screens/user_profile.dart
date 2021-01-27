@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project_2/components/avatar_image.dart';
 import 'package:graduation_project_2/components/drawer_layout.dart';
+import 'package:graduation_project_2/components/student_drawer.dart';
 import 'package:graduation_project_2/components/user_information.dart';
+import 'package:graduation_project_2/screens/welcome_screen.dart';
+
+import 'login_screen.dart';
 
 class UserProfile extends StatelessWidget {
   static String id = 'userProfile_screen';
@@ -12,7 +16,7 @@ class UserProfile extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
-        child: DrawerLayout(),
+        child: WelcomeScreen.isStudent ? StudentDrawer() : DrawerLayout(),
       ),
       body: SafeArea(
         child: Stack(

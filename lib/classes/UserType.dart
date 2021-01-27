@@ -82,6 +82,8 @@ class UserType {
   }
 
   bool isAdult(BuildContext context) {
+    print(dateOfBirth);
+
     String datePattern = "dd-MM-yyyy";
 
     DateTime birthDate = DateFormat(datePattern).parse(dateOfBirth.toString());

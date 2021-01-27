@@ -94,6 +94,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(
                       height: 8.0,
                     ),
+
+                    Container(
+                      child: InputDatePickerFormField(
+                        firstDate: DateTime(1950),
+                        lastDate: DateTime(2021),
+                        onDateSaved: (value){
+                          _user.dateOfBirth = value;
+                        },
+                      ),
+                    ),
+
                     Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -174,18 +185,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ],
                       ),
                     ),
-                    RoundButton(
-                        textValue: 'Birthday',
-                        onPressed: () => showDatePicker(
-                            errorFormatText: 'Enter valid date',
-                            errorInvalidText: 'Enter date in valid range',
-                            helpText: 'Pick your birthday',
-                            context: context,
-                            initialDate: selectedDate,
-                            firstDate: DateTime(1950),
-                            lastDate: DateTime(2022),
-                            initialDatePickerMode: DatePickerMode.year),
-                        color: Colors.lightBlueAccent),
+
+
                     SizedBox(
                       height: 9.0,
                     ),
@@ -195,7 +196,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         textValue: 'Register',
                         color: Colors.blueAccent,
                         onPressed:(){
-                          registerNewUser(context, _user, _auth, _fireStore);
+                          registerNewUser(context, _user, _auth);
                         }
                       ),
                     ),

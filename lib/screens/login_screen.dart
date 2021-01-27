@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project_2/components/alert_dialog.dart';
 import 'package:graduation_project_2/components/round_button.dart';
 import 'package:graduation_project_2/screens/registration_screen.dart';
+import 'package:graduation_project_2/screens/student_welcome_screen.dart';
 import 'package:graduation_project_2/screens/teacher_job_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
 import '../constants.dart';
-import 'chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = 'login_screen';
@@ -71,9 +71,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   textValue: 'Log in',
                   color: Colors.lightBlueAccent,
                   onPressed: () async {
-                    setState(() {
-                      _saving = true;
-                    });
 
                     try {
                       final user = await _auth.signInWithEmailAndPassword(
@@ -85,18 +82,35 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() {
                         _saving = false;
                       });
-                    } on Exception catch (e) {
-                      setState(() {
-                        _saving = false;
-                      });
-                      print(e);
+                    } catch (e) {
+                      switch (e.message) {
+                        case 'There is no user record corresponding to this identifier. The user may have been deleted.':
+                          showAlertDialog(context, 'UserNotFound',
+                              'There is no user record corresponding to this identifier. The user may have been deleted.');
+                          break;
+
+                        case 'The password is invalid or the user does not have a password.':
+                          showAlertDialog(context, 'The password is invalid',
+                              'Wrong password, if it\'s valid password or email');
+                          break;
+
+                        case 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.':
+                          showAlertDialog(context, 'A network error',
+                              'timeout, interrupted connection or unreachable host');
+                          break;
+                        default:
+                          Navigator.pushNamed(context, TeacherJobScreen.id);
+                          break;
+                      }
                     }
+
+                    Navigator.pushNamed(context, StudentWelcomeScreen.id);
                   },
                 ),
               ),
               Center(
                 child: FlatButton(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.pushNamed(context, RegistrationScreen.id);
                   },
                   child: RichText(

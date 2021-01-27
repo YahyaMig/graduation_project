@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project_2/screens/course_screen.dart';
 import 'package:graduation_project_2/screens/login_screen.dart';
 import 'package:graduation_project_2/screens/settings_screen.dart';
 import 'package:graduation_project_2/screens/teacher_job_screen.dart';
@@ -6,8 +7,8 @@ import 'package:graduation_project_2/screens/user_profile.dart';
 import 'avatar_image.dart';
 import 'drawer_items.dart';
 
-class DrawerLayout extends StatelessWidget {
-  const DrawerLayout({
+class StudentDrawer extends StatelessWidget {
+  const StudentDrawer({
     Key key,
   }) : super(key: key);
 
@@ -68,11 +69,11 @@ class DrawerLayout extends StatelessWidget {
           onTap: () {},
         ),
         DrawerListItem(
-          icon: Icons.person_search_outlined,
-          text: 'Job Search',
+          icon: Icons.book_outlined,
+          text: 'Courses',
           onTap: () {
             if (ModalRoute.of(context).settings.name != TeacherJobScreen.id)
-              Navigator.pushNamed(context, TeacherJobScreen.id);
+              Navigator.pushNamed(context, CourseScreen.id);
             else
               Navigator.pop(context);
           },

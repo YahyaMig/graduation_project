@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project_2/components/avatar_image.dart';
 import 'package:graduation_project_2/components/drawer_items.dart';
 import 'package:graduation_project_2/components/drawer_layout.dart';
+import 'package:graduation_project_2/components/student_drawer.dart';
+import 'package:graduation_project_2/screens/change_password_screen.dart';
+import 'package:graduation_project_2/screens/welcome_screen.dart';
+
+import 'login_screen.dart';
 
 class SettingScreen extends StatelessWidget {
   static String id = 'setting_screen';
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  bool isStudnet = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
-        child: DrawerLayout(),
+        child: WelcomeScreen.isStudent ? StudentDrawer() : DrawerLayout(),
       ),
       body: SafeArea(
         child: Column(
@@ -97,7 +103,9 @@ class SettingScreen extends StatelessWidget {
               child: DrawerListItem(
                 icon: Icons.lock_outline,
                 text: 'Change Password',
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, ChangePasswordScreen.id);
+                },
               ),
             ),
             Padding(
