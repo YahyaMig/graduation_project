@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project_2/classes/UserType.dart';
 import 'package:graduation_project_2/screens/login_screen.dart';
 import 'package:graduation_project_2/screens/settings_screen.dart';
 import 'package:graduation_project_2/screens/teacher_job_screen.dart';

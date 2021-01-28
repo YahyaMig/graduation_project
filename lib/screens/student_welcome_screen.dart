@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project_2/components/drawer_layout.dart';
 import 'package:graduation_project_2/components/student_drawer.dart';
 
 class StudentWelcomeScreen extends StatelessWidget {

@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project_2/classes/UserType.dart';
 import 'package:graduation_project_2/components/alert_dialog.dart';
+import 'package:graduation_project_2/constants.dart';
+import 'package:graduation_project_2/screens/login_screen.dart';
 import 'package:graduation_project_2/screens/teacher_job_screen.dart';
 
 void registerNewUser(
@@ -16,10 +18,11 @@ void registerNewUser(
           email: user.email, password: user.password);
 
       if (newUser != null) {
-        Navigator.pushNamed(context, TeacherJobScreen.id);
-        
-        // here should the api be invoked!.
-        // to add the data to the database
+        dynamic result = await invokeAPI('add_user', kUser.toJson());
+        if (result['status_code'] == 200){
+          Navigator.pushNamed(context, LoginScreen.id);
+        }
+
       }
     }
   } on FirebaseAuthException catch (e) {

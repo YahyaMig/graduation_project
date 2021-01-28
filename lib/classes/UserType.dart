@@ -1,42 +1,39 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project_2/classes/course.dart';
 import 'package:graduation_project_2/components/alert_dialog.dart';
 import 'package:graduation_project_2/constants.dart';
 import 'package:password_strength/password_strength.dart';
 import 'package:intl/intl.dart';
 
 class UserType {
-  String fName;
-  String email;
+  String fName='';
+  String email='';
   String password;
-  String address;
-  String city;
+  String address='';
+  String city='';
   String country = 'Jordan';
-
-  DateTime dateOfBirth;
-  int phone;
-  // Student = 1, Teacher = 0
-  bool type;
-  String finalType;
-
+  DateTime dateOfBirth = DateTime(2015);
+  int phone=0;
+  int userID;
   // male = 1, female = 0
-  bool gender;
+  bool gender = true;
   String finalGender;
+  List<Course> courses = new List<Course>();
 
-  UserType();
+  UserType(
+      {this.email,
+      this.fName,
+      this.address,
+      this.city,
+      this.country,
+      this.dateOfBirth,
+      this.phone,
+      this.userID,
+      this.gender});
 
-  @override
-  String toString() {
-    // TODO: implement toString
-    return fName +
-        email +
-        address +
-        city +
-        country +
-        phone.toString() +
-        dateOfBirth.toString() +
-        type.toString() +
-        gender.toString();
+  String getAddress() {
+    return city !=null ?'$city $address': address;
   }
 
   bool isValidEmail(BuildContext context) {
@@ -74,13 +71,6 @@ class UserType {
     return 0;
   }
 
-  // 1 = Student , 2 = Teacher
-  int getUserType() {
-    if (type) return 1;
-
-    return 2;
-  }
-
   bool isAdult(BuildContext context) {
     print(dateOfBirth);
 
@@ -100,4 +90,24 @@ class UserType {
     }
     return true;
   }
+
+  String getCourses(){
+    String allCourses = '';
+    for(Course course in courses){
+      allCourses += ' ${course.courseName}';
+      if (course != courses.last)
+        allCourses += ',';
+    }
+
+    return allCourses;
+  }
+
+  Map<String, dynamic> toJson() => {
+    "FullName": fName,
+    "phone_number": phone,
+    "address": getAddress(),
+    "email": email,
+    "user_type": 1,
+    "gender": gender,
+  };
 }

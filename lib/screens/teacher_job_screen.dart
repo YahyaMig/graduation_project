@@ -6,12 +6,18 @@ import 'package:graduation_project_2/components/student_job_info.dart';
 
 import '../constants.dart';
 
-class TeacherJobScreen extends StatelessWidget {
+class TeacherJobScreen extends StatefulWidget {
   static String id = 'teacher_job_screen';
+  @override
+  _TeacherJobScreenState createState() => _TeacherJobScreenState();
+}
+
+class _TeacherJobScreenState extends State<TeacherJobScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(

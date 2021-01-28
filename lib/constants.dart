@@ -1,4 +1,50 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'classes/UserType.dart';
+import 'classes/course.dart';
+import 'package:http/http.dart' as http;
+
+String apiLink = 'https://wkn2rme5hi.execute-api.us-east-1.amazonaws.com/test';
+
+UserType kUser;
+void setUserInformation(dynamic information) {
+
+  dynamic data = information['data'];
+
+  String fullName = data['FullName'];
+  int userID = data['user_id'];
+  int phoneNumber = data['phone_number'];
+  String address = data['address'];
+  String userEmail = data['email'];
+  int userGender = data['gender'];
+
+  kUser = UserType(
+      fName: fullName,
+      phone: phoneNumber,
+      address: address,
+      email: userEmail,
+      gender: userGender == 1 ? true : false,
+      userID: userID);
+
+  Map<String, dynamic> courses = information['courses'];
+  courses.forEach(
+      (k, v) => kUser.courses.add(Course(v['courseID'], v['courseName'])));
+}
+
+Future <dynamic> invokeAPI(String operation, Map<String, dynamic>data) async {
+
+  http.Response result = await http.post(
+    apiLink,
+    body: jsonEncode(
+      <String, dynamic> {
+        'operation': operation,
+        'data': data,
+      },
+    ),
+  );
+  return jsonDecode(result.body);
+}
 
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,

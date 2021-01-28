@@ -5,8 +5,10 @@ import 'package:graduation_project_2/classes/UserType.dart';
 import 'package:graduation_project_2/components/round_button.dart';
 import 'package:graduation_project_2/components/text_field_container.dart';
 import 'package:graduation_project_2/logo.dart';
+import 'package:graduation_project_2/screens/teacher_job_screen.dart';
 import 'package:graduation_project_2/services/registeration_activity.dart';
 import '../Styles.dart';
+import '../constants.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static String id = 'registeration_screen';
@@ -19,7 +21,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   final _fireStore = Firestore.instance;
   final _auth = FirebaseAuth.instance;
-  final _user = UserType();
   final controller = ScrollController();
 
   DateTime selectedDate = DateTime.now();
@@ -58,37 +59,37 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     TextFieldContainer(
                       hintText: 'Fullname',
                       onChanged: (value) {
-                        _user.address = value;
+                        kUser.address = value;
                       },
                     ),
                     TextFieldContainer(
                       hintText: 'Email',
                       onChanged: (value) {
-                        _user.email = value;
+                        kUser.email = value;
                       },
                     ),
                     TextFieldContainer(
                       hintText: 'Password',
                       onChanged: (value) {
-                        _user.password = value;
+                        kUser.password = value;
                       },
                     ),
                     TextFieldContainer(
                       hintText: 'Phone',
                       onChanged: (value) {
-                        _user.phone = value;
+                        kUser.phone = value;
                       },
                     ),
                     TextFieldContainer(
                       hintText: 'Address',
                       onChanged: (value) {
-                        _user.address = value;
+                        kUser.address = value;
                       },
                     ),
                     TextFieldContainer(
                       hintText: 'City',
                       onChanged: (value) {
-                        _user.city = value;
+                        kUser.city = value;
                       },
                     ),
                     SizedBox(
@@ -100,7 +101,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         firstDate: DateTime(1950),
                         lastDate: DateTime(2021),
                         onDateSaved: (value){
-                          _user.dateOfBirth = value;
+                          kUser.dateOfBirth = value;
                         },
                       ),
                     ),
@@ -111,10 +112,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         children: <Widget>[
                           Radio(
                               value: true,
-                              groupValue: _user.gender,
+                              groupValue: kUser.gender,
                               onChanged: (value) {
                                 setState(() {
-                                  _user.gender = value;
+                                  kUser.gender = value;
                                 });
                               }),
                           Text(
@@ -129,10 +130,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                           Radio(
                               value: false,
-                              groupValue: _user.gender,
+                              groupValue: kUser.gender,
                               onChanged: (value) {
                                 setState(() {
-                                  _user.gender = value;
+                                  kUser.gender = value;
                                 });
                               }),
                           Text(
@@ -145,47 +146,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ],
                       ),
                     ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Radio(
-                              value: true,
-                              groupValue: _user.type,
-                              onChanged: (value) {
-                                setState(() {
-                                  _user.type = value;
-                                });
-                              }),
-                          Text(
-                            'Student',
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Radio(
-                              value: false,
-                              groupValue: _user.type,
-                              onChanged: (value) {
-                                setState(() {
-                                  _user.type = value;
-                                });
-                              }),
-                          Text(
-                            'Teacher',
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-
 
                     SizedBox(
                       height: 9.0,
@@ -196,7 +156,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         textValue: 'Register',
                         color: Colors.blueAccent,
                         onPressed:(){
-                          registerNewUser(context, _user, _auth);
+                          registerNewUser(context, kUser, _auth);
                         }
                       ),
                     ),

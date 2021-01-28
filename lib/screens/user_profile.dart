@@ -4,13 +4,16 @@ import 'package:graduation_project_2/components/drawer_layout.dart';
 import 'package:graduation_project_2/components/student_drawer.dart';
 import 'package:graduation_project_2/components/user_information.dart';
 import 'package:graduation_project_2/screens/welcome_screen.dart';
+import '../constants.dart';
 
-import 'login_screen.dart';
-
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
   static String id = 'userProfile_screen';
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  @override
+  _UserProfileState createState() => _UserProfileState();
+}
 
+class _UserProfileState extends State<UserProfile> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +76,7 @@ class UserProfile extends StatelessWidget {
                         Positioned(
                           top: 115.0,
                           child: Text(
-                            'Yahya ibrahim',
+                            kUser.fName,
                             style: TextStyle(
                                 fontSize: 14.0, fontWeight: FontWeight.bold),
                           ),
@@ -90,7 +93,7 @@ class UserProfile extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  '0777107516',
+                                  '0${kUser.phone.toString()}',
                                   style: TextStyle(color: Colors.black),
                                 ),
                               )
@@ -109,7 +112,7 @@ class UserProfile extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Text(
-                                  'myemail@email.com',
+                                  kUser.email,
                                   style: TextStyle(color: Colors.black),
                                 ),
                               )
@@ -124,7 +127,7 @@ class UserProfile extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       width: 350,
-                      height: 300,
+                      height: 250,
                       margin: EdgeInsets.only(top: 60.0),
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -143,19 +146,19 @@ class UserProfile extends StatelessWidget {
                               height: 10.0,
                             ),
                             UserInformation(
-                              text: 'Yahya Ibrahim',
+                              text: kUser.fName,
                               textName: 'Name',
                             ),
                             UserInformation(
-                              text: '+962777107516',
+                              text: '0${kUser.phone}',
                               textName: 'Mobile',
                             ),
                             UserInformation(
-                              text: 'myemail@email.com',
+                              text: kUser.email,
                               textName: 'Email',
                             ),
                             UserInformation(
-                              text: 'Amman, Jordan',
+                              text: kUser.getAddress(),
                               textName: 'Address',
                             ),
                             UserInformation(
@@ -163,12 +166,8 @@ class UserProfile extends StatelessWidget {
                               textName: 'User Type',
                             ),
                             UserInformation(
-                              text: 'Mon, Tue, Wed',
-                              textName: 'Availability Days',
-                            ),
-                            UserInformation(
-                              text: 'C++, English, Python, Flutter,\n Android',
-                              textName: 'Subjects',
+                              text: kUser.getCourses(),
+                              textName: 'I can teach',
                             ),
                           ],
                         ),
