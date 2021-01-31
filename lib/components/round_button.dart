@@ -4,11 +4,13 @@ class RoundButton extends StatelessWidget {
   final String textValue;
   final Function onPressed;
   final Color color;
+  final IconData icon;
 
   RoundButton(
       {@required this.textValue,
       @required this.onPressed,
-      @required this.color});
+      @required this.color,
+      this.icon = Icons.arrow_right});
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +31,9 @@ class RoundButton extends StatelessWidget {
                 this.textValue,
                 style: TextStyle(color: Colors.white),
               ),
-              Icon(Icons.arrow_right,
-              color: Colors.white),
-
-
+              this.icon == null
+                  ? SizedBox()
+                  : Icon(this.icon, color: Colors.white),
             ],
           ),
         ),

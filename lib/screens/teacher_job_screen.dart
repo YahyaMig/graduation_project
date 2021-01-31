@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project_2/classes/appoitment.dart';
+import 'package:graduation_project_2/components/background.dart';
 import 'package:graduation_project_2/components/drawer_layout.dart';
-import 'package:graduation_project_2/components/reusableCard.dart';
-import 'package:graduation_project_2/components/student_job_info.dart';
+import 'package:graduation_project_2/components/avatar_image.dart';
+import 'package:graduation_project_2/screens/client_profile.dart';
 
 import '../constants.dart';
 
 class TeacherJobScreen extends StatefulWidget {
   static String id = 'teacher_job_screen';
+
   @override
   _TeacherJobScreenState createState() => _TeacherJobScreenState();
 }
@@ -16,8 +19,14 @@ class _TeacherJobScreenState extends State<TeacherJobScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    kUser.getAppointments();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
@@ -25,114 +34,105 @@ class _TeacherJobScreenState extends State<TeacherJobScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Positioned(
-                top: 15.0,
-                left: 15.0,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.black,
+          child: Background(
+            mainImage: true,
+            top2Image: true,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 15.0,
+                  left: 15.0,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.menu,
+                      color: Colors.black,
+                    ),
+                    onPressed: () => _scaffoldKey.currentState.openDrawer(),
                   ),
-                  onPressed: () => _scaffoldKey.currentState.openDrawer(),
                 ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 50,
+                Positioned(
+                  top: 40.0,
+                  left: 160.0,
+                  child: Text(
+                    'JOBS',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    'Jobs',
-                    style:
-                        TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 20),
-                    height: 100.0,
-                    width: 400,
-                    child: ReusableCard(
-                      colour: Colors.white,
-                      cardChild: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                child: Image.asset('images/avatar1.jpg')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 90.0),
+                  child: ListView.builder(
+                    itemCount: kUser.appointments.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setClientProfile(kUser.appointments[index].user);
+                          Navigator.pushNamed(context, ClientProfile.id);
+                        },
+                        child: Card(
+                          elevation: 25,
+                          color: Colors.white70,
+                          shadowColor: Colors.grey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          margin: EdgeInsets.all(10.0),
+                          child: Stack(
                             children: <Widget>[
-                              Text(
-                                'Yahya migdady',
-                                style: kTextCardStyle,
+                              AvatarPicture(
+                                imagePath: 'images/avatar1.jpg',
+                                borderWidth: 1,
                               ),
-                              StudentJobInfo(
-                                textColor: Colors.grey,
-                                icon: Icons.email_outlined,
-                                text: 'Yahya@email.com',
-                                iconColor: Colors.lightBlueAccent,
+                              Positioned(
+                                left: 120.0,
+                                top: 30,
+                                child: Text(
+                                  kUser.appointments[index].getName(),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
-                              StudentJobInfo(
-                                iconColor: Colors.lightBlueAccent,
-                                textColor: Colors.grey,
-                                icon: Icons.add_location,
-                                text: 'amman, jordan, at just',
-                                sizedbox: true,
+                              Positioned(
+                                left: 120.0,
+                                bottom: 37,
+                                child: Text(
+                                  'Time ${kUser.appointments[index].timeFrom}:00 - ${kUser.appointments[index].timeTo}:00',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Positioned(
+                                left: 120.0,
+                                bottom: 10,
+                                child: Text(
+                                  'AT ${kUser.appointments[index].location}',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+
+                              Positioned(
+                                right: 30.0,
+                                bottom: 60,
+                                child: Text(
+                                  'Contact me!',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+
+                              Positioned(
+                                right: 30.0,
+                                bottom: 30,
+                                child: Text(
+                                  '0${kUser.appointments[index].user.phoneNumber}',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 20),
-                    height: 100.0,
-                    width: 400,
-                    child: ReusableCard(
-                      colour: Colors.white,
-                      cardChild: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: Image.asset('images/avatar1.jpg'),
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                'Yahya migdady',
-                                style: kTextCardStyle,
-                              ),
-                              StudentJobInfo(
-                                textColor: Colors.grey,
-                                icon: Icons.email_outlined,
-                                text: 'Yahya@email.com',
-                                iconColor: Colors.lightBlueAccent,
-                              ),
-                              StudentJobInfo(
-                                iconColor: Colors.lightBlueAccent,
-                                textColor: Colors.grey,
-                                icon: Icons.add_location,
-                                text: 'amman, jordan, at just',
-                                sizedbox: true,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

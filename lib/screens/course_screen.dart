@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project_2/components/course_catagories.dart';
 import 'package:graduation_project_2/components/student_drawer.dart';
 
-import '../constants.dart';
 
 class CourseScreen extends StatefulWidget {
   static String id = "course_screen";

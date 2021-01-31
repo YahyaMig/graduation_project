@@ -6,15 +6,16 @@ class TextFieldContainer extends StatelessWidget {
 
   final String hintText;
   final Function onChanged;
+  final bool isNumber;
 
-  TextFieldContainer({@required this.hintText, @required this.onChanged});
+  TextFieldContainer({@required this.hintText, @required this.onChanged, this.isNumber = true});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 58,
       child: TextField(
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: isNumber? TextInputType.emailAddress : TextInputType.number,
         textAlign: TextAlign.center,
         decoration:
         kTextFieldDecoration.copyWith(hintText: this.hintText),

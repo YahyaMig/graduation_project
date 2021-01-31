@@ -1,133 +1,123 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduation_project_2/classes/UserType.dart';
-import 'package:graduation_project_2/classes/course.dart';
 import 'package:graduation_project_2/components/alert_dialog.dart';
-import 'package:graduation_project_2/components/round_button.dart';
+import 'package:graduation_project_2/components/background.dart';
+import 'package:graduation_project_2/components/custome_text_field.dart';
+import 'package:graduation_project_2/constants.dart';
 import 'package:graduation_project_2/screens/registration_screen.dart';
 import 'package:graduation_project_2/screens/student_welcome_screen.dart';
 import 'package:graduation_project_2/screens/teacher_job_screen.dart';
-import 'package:http/http.dart' as http;
-import '../constants.dart';
 
 class LoginScreen extends StatefulWidget {
-  static String id = 'login_screen';
-  static bool isStudent = true;
+  static String id = 'loginScreen';
+  static bool isStudent = false;
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  void goNextScreen() async {
-    Map<String, dynamic> data = {'email': email};
-    dynamic information = await invokeAPI('retrieve_user', data);
-
-    setUserInformation(information);
-
-    if (LoginScreen.isStudent)
-      Navigator.pushNamed(context, StudentWelcomeScreen.id);
-    else
-      Navigator.pushNamed(context, TeacherJobScreen.id);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    createUser();
   }
-
-  final _auth = FirebaseAuth.instance;
-  bool _saving = false;
-  String email;
-  String password;
 
   @override
   Widget build(BuildContext context) {
+    final _auth = FirebaseAuth.instance;
+    Size size = MediaQuery.of(context).size;
+
+    void goNextScreen() async {
+      Map<String, dynamic> data = {'email': kUser.email};
+
+      dynamic information = await invokeAPI('retrieve_user', data);
+
+      print(information);
+      setUserInformation(information);
+
+      if (LoginScreen.isStudent)
+        Navigator.pushNamedAndRemoveUntil(
+            context, StudentWelcomeScreen.id, (route) => false);
+      else
+        Navigator.pushNamedAndRemoveUntil(
+            context, TeacherJobScreen.id, (route) => false);
+    }
+
+    Future signIn(String email, String _password, FirebaseAuth _auth) async {
+      try {
+        dynamic _user;
+        if (email != null && _password != null) {
+          dynamic _user = await _auth.signInWithEmailAndPassword(
+              email: email, password: _password);
+          if (_user != null) {
+            goNextScreen();
+          }
+        } else {
+          showAlertDialog(context, 'Wrong email or password',
+              'enter your email and password');
+        }
+      } catch (e) {
+        switch (e.message) {
+          case 'There is no user record corresponding to this identifier. The user may have been deleted.':
+            showAlertDialog(context, 'UserNotFound',
+                'There is no user record corresponding to this identifier. The user may have been deleted.');
+            break;
+
+          case 'The password is invalid or the user does not have a password.':
+            showAlertDialog(context, 'The password is invalid',
+                'Wrong password, if it\'s valid password or email');
+            break;
+
+          case 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.':
+            showAlertDialog(context, 'A network error',
+                'timeout, interrupted connection or unreachable host');
+            break;
+          default:
+            showAlertDialog(context, e.toString(), e.toString());
+            break;
+        }
+      }
+    }
+
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.0),
+          child: Background(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                SizedBox(
-                  height: 75.0,
-                ),
-                Hero(
-                  tag: 'logo_img',
-                  child: Container(
-                    height: 200.0,
-                    child: Image.asset('images/logo_img.jpg'),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Text(
+                    "LOGIN",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2661FA),
+                      fontSize: 36,
+                      fontFamily: 'Source Sans Pro',
+                    ),
+                    textAlign: TextAlign.left,
                   ),
                 ),
-                SizedBox(
-                  height: 48.0,
-                ),
-                TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  textAlign: TextAlign.center,
-                  decoration: kTextFieldDecoration.copyWith(
-                      hintText: 'Enter your email'),
+                SizedBox(height: size.height * 0.03),
+                kTextField(
+                  hintText: 'Email',
                   onChanged: (value) {
-                    email = value;
+                    kUser.email = value;
                   },
                 ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.center,
-                  decoration: kTextFieldDecoration.copyWith(
-                      hintText: 'Enter your password'),
+                SizedBox(height: size.height * 0.03),
+                kTextField(
+                  hintText: 'Password',
+                  isPassword: true,
                   onChanged: (value) {
-                    password = value;
+                    kUser.password = value;
                   },
                 ),
-                SizedBox(
-                  height: 24.0,
-                ),
-                Hero(
-                  tag: 'login button',
-                  child: RoundButton(
-                    textValue: 'Log in',
-                    color: Colors.lightBlueAccent,
-                    onPressed: () async {
-                      try {
-                        if (email != null && password != null) {
-                          final user = await _auth.signInWithEmailAndPassword(
-                              email: email, password: password);
-                          if (user != null) {
-                            goNextScreen();
-                          }
-                        } else
-                          showAlertDialog(context, 'Wrong email or password',
-                              'enter your email and password');
-                      } catch (e) {
-                        switch (e.message) {
-                          case 'There is no user record corresponding to this identifier. The user may have been deleted.':
-                            showAlertDialog(context, 'UserNotFound',
-                                'There is no user record corresponding to this identifier. The user may have been deleted.');
-                            break;
-
-                          case 'The password is invalid or the user does not have a password.':
-                            showAlertDialog(context, 'The password is invalid',
-                                'Wrong password, if it\'s valid password or email');
-                            break;
-
-                          case 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.':
-                            showAlertDialog(context, 'A network error',
-                                'timeout, interrupted connection or unreachable host');
-                            break;
-                          default:
-                            showAlertDialog(
-                                context, e.toString(), e.toString());
-                            break;
-                        }
-                      }
-                    },
-                  ),
-                ),
+                SizedBox(height: size.height * 0.02),
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -137,7 +127,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           groupValue: LoginScreen.isStudent,
                           onChanged: (value) {
                             setState(() {
-                              print(value);
                               LoginScreen.isStudent = value;
                             });
                           }),
@@ -156,7 +145,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           groupValue: LoginScreen.isStudent,
                           onChanged: (value) {
                             setState(() {
-                              print(value);
                               LoginScreen.isStudent = value;
                             });
                           }),
@@ -170,25 +158,65 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-                Center(
-                  child: FlatButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, RegistrationScreen.id);
+                SizedBox(height: size.height * 0.03),
+                Container(
+                  alignment: Alignment.centerRight,
+                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  child: Text(
+                    "Forgot your password?",
+                    style: TextStyle(fontSize: 12, color: Color(0XFF2661FA)),
+                  ),
+                ),
+                SizedBox(height: size.height * 0.05),
+                Container(
+                  alignment: Alignment.centerRight,
+                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  child: RaisedButton(
+                    onPressed: () async {
+                      await signIn(kUser.email, kUser.password, _auth);
                     },
-                    child: RichText(
-                      text: TextSpan(
-                        text: "Don't have an account? ",
-                        style: TextStyle(color: Colors.black),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Create',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ],
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(80.0)),
+                    textColor: Colors.white,
+                    padding: const EdgeInsets.all(0),
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 50.0,
+                      width: size.width * 0.5,
+                      decoration: new BoxDecoration(
+                          borderRadius: BorderRadius.circular(80.0),
+                          gradient: new LinearGradient(colors: [
+                            Color.fromARGB(255, 255, 136, 34),
+                            Color.fromARGB(255, 255, 177, 41)
+                          ])),
+                      padding: const EdgeInsets.all(0),
+                      child: Text(
+                        "LOGIN",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
                 ),
+                Container(
+                  alignment: Alignment.centerRight,
+                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  child: GestureDetector(
+                    onTap: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterScreen()))
+                    },
+                    child: Text(
+                      "Don't Have an Account? Sign up",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2661FA)),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

@@ -5,9 +5,9 @@ import 'constants.dart';
 class MyHeader extends StatefulWidget {
   final String imagee;
   final String text;
-  final double Height;
+  final double height;
 
-  const MyHeader({Key key, this.imagee, this.text, this.Height})
+  const MyHeader({Key key, this.imagee, this.text, this.height})
       : super(key: key);
 
   @override
@@ -19,7 +19,7 @@ class _MyHeaderState extends State<MyHeader> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(left: 40, top: 50, right: 20),
-      height: widget.Height,
+      height: widget.height,
       width: double.infinity,
       decoration: BoxDecoration(
         image: DecorationImage(

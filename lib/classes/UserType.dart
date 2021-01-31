@@ -1,39 +1,48 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project_2/classes/appoitment.dart';
 import 'package:graduation_project_2/classes/course.dart';
+import 'package:graduation_project_2/classes/multi_media.dart';
 import 'package:graduation_project_2/components/alert_dialog.dart';
 import 'package:graduation_project_2/constants.dart';
 import 'package:password_strength/password_strength.dart';
 import 'package:intl/intl.dart';
 
 class UserType {
-  String fName='';
-  String email='';
+  String fName = '';
+  String email = '';
   String password;
-  String address='';
-  String city='';
+  String address = '';
+  String city = '';
   String country = 'Jordan';
+
+  MultiMedia multiMediaLinks;
+
   DateTime dateOfBirth = DateTime(2015);
-  int phone=0;
+
   int userID;
   // male = 1, female = 0
   bool gender = true;
   String finalGender;
+  bool isStudent;
+  bool isActive = false;
+  int phoneNumber = 0;
   List<Course> courses = new List<Course>();
+  List<Appointment> appointments = new List<Appointment>();
 
   UserType(
-      {this.email,
-      this.fName,
+      {this.fName,
+      this.email,
       this.address,
-      this.city,
-      this.country,
-      this.dateOfBirth,
-      this.phone,
-      this.userID,
-      this.gender});
+      this.phoneNumber,
+      this.gender,
+      this.userID}) {
+    multiMediaLinks = new MultiMedia();
+  }
 
   String getAddress() {
-    return city !=null ?'$city $address': address;
+    return city != null ? '$city $address' : address;
   }
 
   bool isValidEmail(BuildContext context) {
@@ -54,7 +63,7 @@ class UserType {
 
   bool isValidNumberPhone(BuildContext context) {
     RegExp phoneReg = new RegExp(phoneRegularExpression);
-    RegExpMatch match = phoneReg.firstMatch(phone.toString());
+    RegExpMatch match = phoneReg.firstMatch(phoneNumber.toString());
 
     if (match == null) {
       showAlertDialog(context, 'Wrong phone',
@@ -91,23 +100,106 @@ class UserType {
     return true;
   }
 
-  String getCourses(){
+  String getCourses() {
     String allCourses = '';
-    for(Course course in courses){
+    for (Course course in courses) {
       allCourses += ' ${course.courseName}';
-      if (course != courses.last)
-        allCourses += ',';
+      if (course != courses.last) allCourses += ',';
     }
 
     return allCourses;
   }
 
   Map<String, dynamic> toJson() => {
-    "FullName": fName,
-    "phone_number": phone,
-    "address": getAddress(),
-    "email": email,
-    "user_type": 1,
-    "gender": gender,
-  };
+        "FullName": this.fName,
+        "phone_number": this.phoneNumber,
+        "address": 'amman',
+        "email": this.email,
+        "user_type": 1,
+        "gender": 1,
+      };
+
+  void updateInfo(
+      {String fullName,
+      String email,
+      String password,
+      int phone,
+      String address,
+      String city,
+      bool gender,
+      int userID}) {
+    this.fName = fullName;
+    this.email = email;
+    this.password = password;
+    this.phoneNumber = phone;
+    this.city = city;
+    this.address = address;
+    this.gender = gender ? true : false;
+    this.userID = userID;
+
+    this.getAppointments();
+  }
+
+  UserType setUserInformation(dynamic information) {
+    dynamic data = information['data'];
+
+    String fullName = data['FullName'];
+    int userID = data['user_id'];
+    int phoneNumber = data['phone_number'];
+    String address = data['address'];
+    String userEmail = data['email'];
+    int userGender = data['gender'];
+
+    this.fName = fullName;
+    this.userID = userID;
+    this.phoneNumber = phoneNumber;
+    this.address = address;
+    this.email = userEmail;
+    this.gender = userGender == 1 ? true : false;
+
+    Map<String, dynamic> courses = information['courses'];
+    courses.forEach(
+        (k, v) => this.courses.add(Course(v['courseID'], v['courseName'])));
+
+    return this;
+  }
+
+  String getName() {
+    return this.fName;
+  }
+
+  void getAppointments() async {
+    Map<String, dynamic> data = {"teacher_id": this.userID};
+
+    dynamic information = await invokeAPI('retrieve_appointment', data);
+
+    Map<String, dynamic> appointments = information['appointment_inforamtion'];
+
+    this.appointments.clear();
+    if (appointments != null) {
+      appointments.forEach((k, v) {
+        this.appointments.add(Appointment(
+            appointmentID: v['appointmentID'],
+            studentID: v['studentID'],
+            teacherID: v['teacherID'],
+            timeFrom: v['timeFrom'],
+            timeTo: v['timeTo'],
+            location: v['location']));
+      });
+    }
+  }
+
+  void setLinks() async {
+    Map<String, dynamic> data = {"user_id": this.userID};
+    dynamic response = await invokeAPI('retrieve_link', data);
+
+    if (response['status_code'] == 200) {
+      if (response['links']['youtube'] != null)
+        this.multiMediaLinks.youtubeLink = response['links']['youtube'];
+
+      if (response['links']['dropbox'] != null)
+        this.multiMediaLinks.dropboxLink = response['links']['dropbox'];
+    } else
+      print('Something went wrong');
+  }
 }

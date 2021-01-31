@@ -8,22 +8,14 @@ import 'package:graduation_project_2/components/student_drawer.dart';
 import 'package:graduation_project_2/components/user_information.dart';
 import 'package:graduation_project_2/screens/welcome_screen.dart';
 import '../constants.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class UserProfile extends StatefulWidget {
-  static String id = 'userProfile_screen';
+class ClientProfile extends StatefulWidget {
+  static String id = 'client_screen';
   @override
-  _UserProfileState createState() => _UserProfileState();
+  _ClientProfileState createState() => _ClientProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
-  _launchURL() async {
-    if (await canLaunch(kUser.multiMediaLinks.getYoutubeLink())) {
-      await launch(kUser.multiMediaLinks.getYoutubeLink());
-    } else {
-      throw 'Could not launch ${kUser.multiMediaLinks.getYoutubeLink()}';
-    }
-  }
+class _ClientProfileState extends State<ClientProfile> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
@@ -59,9 +51,7 @@ class _UserProfileState extends State<UserProfile> {
                     child: Text(
                       'PROFILE',
                       style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Source Sans Pro'),
+                          fontSize: 20.0, fontWeight: FontWeight.bold, fontFamily: 'Source Sans Pro'),
                     ),
                   ),
                   Padding(
@@ -95,7 +85,7 @@ class _UserProfileState extends State<UserProfile> {
                               Positioned(
                                 top: 115.0,
                                 child: Text(
-                                  kUser.fName,
+                                  clientProfile.fName,
                                   style: TextStyle(
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.bold),
@@ -108,51 +98,17 @@ class _UserProfileState extends State<UserProfile> {
                                   shadowColor: Colors.grey,
                                   elevation: 2,
                                   icon: Icons.phone_outlined,
-                                  text: '0${kUser.phoneNumber.toString()}',
+                                  text: '0${clientProfile.phoneNumber.toString()}',
                                 ),
                               ),
                               Positioned(
-                                left: 10.0,
-                                bottom: 10.0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _launchURL();
-                                  },
-                                  child: Container(
-                                    height: 50.0,
-                                    width: 50.0,
-                                    child: Image(
-                                      fit: BoxFit.fill,
-                                      image: AssetImage(
-                                          'assets/images/youtube.png'),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 75.0,
-                                bottom: 15.0,
-                                child: Container(
-                                  height: 40.0,
-                                  width: 40.0,
-                                  child: Image(
-                                    fit: BoxFit.fill,
-                                    image: AssetImage(
-                                        'assets/images/googleDrive.png'),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 130.0,
-                                bottom: 15.0,
-                                child: Container(
-                                  height: 45.0,
-                                  width: 45.0,
-                                  child: Image(
-                                    fit: BoxFit.fill,
-                                    image: AssetImage(
-                                        'assets/images/WhatsApp.png'),
-                                  ),
+                                left: -10,
+                                top: 140,
+                                child: CustomCard(
+                                  shadowColor: Colors.grey,
+                                  elevation: 2,
+                                  icon: Icons.email_outlined,
+                                  text: clientProfile.email,
                                 ),
                               ),
                             ],
@@ -188,11 +144,11 @@ class _UserProfileState extends State<UserProfile> {
                                   height: 10.0,
                                 ),
                                 UserInformation(
-                                  text: kUser.fName,
+                                  text: clientProfile.fName,
                                   textName: 'Name',
                                 ),
                                 UserInformation(
-                                  text: '0${kUser.phoneNumber}',
+                                  text: '0${clientProfile.phoneNumber}',
                                   textName: 'Mobile',
                                 ),
                                 UserInformation(
@@ -200,7 +156,7 @@ class _UserProfileState extends State<UserProfile> {
                                   textName: 'Address',
                                 ),
                                 UserInformation(
-                                  text: kUser.getCourses(),
+                                  text: clientProfile.getCourses(),
                                   textName: 'I can teach',
                                 ),
                               ],

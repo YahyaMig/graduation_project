@@ -1,15 +1,46 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'classes/UserType.dart';
 import 'classes/course.dart';
 import 'package:http/http.dart' as http;
 
-String apiLink = 'https://wkn2rme5hi.execute-api.us-east-1.amazonaws.com/test';
+import 'components/alert_dialog.dart';
 
+const String apiLink =
+    'https://wkn2rme5hi.execute-api.us-east-1.amazonaws.com/test';
+int departmentID = 0;
 UserType kUser;
-void setUserInformation(dynamic information) {
+List availableCourses;
+UserType clientProfile;
 
+void setClientProfile(UserType client) {
+  clientProfile = client;
+}
+
+TimeOfDay getTime(TimeOfDay time, context) {
+  if (time == null) {
+    showAlertDialog(
+        context, 'Wrong time', 'Make sure to select start hour first!');
+  } else
+    return TimeOfDay(hour: time.hour + 1, minute: time.minute);
+}
+
+Future<void> getAvailableCourses(int departmentID) async {
+  availableCourses = new List<Course>();
+
+  Map<String, int> data = {"department_id": departmentID};
+  dynamic information = await invokeAPI('retrieve_courses', data);
+
+  Map<String, dynamic> courses = information['courses'];
+  courses.forEach(
+      (k, v) => availableCourses.add(Course(v['courseID'], v['courseName'])));
+}
+
+void createUser() {
+  kUser = UserType();
+}
+
+void setUserInformation(dynamic information) {
   dynamic data = information['data'];
 
   String fullName = data['FullName'];
@@ -19,8 +50,8 @@ void setUserInformation(dynamic information) {
   String userEmail = data['email'];
   int userGender = data['gender'];
 
-  kUser = UserType(
-      fName: fullName,
+  kUser.updateInfo(
+      fullName: fullName,
       phone: phoneNumber,
       address: address,
       email: userEmail,
@@ -30,14 +61,15 @@ void setUserInformation(dynamic information) {
   Map<String, dynamic> courses = information['courses'];
   courses.forEach(
       (k, v) => kUser.courses.add(Course(v['courseID'], v['courseName'])));
+
+  kUser.setLinks();
 }
 
-Future <dynamic> invokeAPI(String operation, Map<String, dynamic>data) async {
-
+Future<dynamic> invokeAPI(String operation, Map<String, dynamic> data) async {
   http.Response result = await http.post(
     apiLink,
     body: jsonEncode(
-      <String, dynamic> {
+      <String, dynamic>{
         'operation': operation,
         'data': data,
       },

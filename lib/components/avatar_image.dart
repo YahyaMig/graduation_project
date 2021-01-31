@@ -15,7 +15,7 @@ class AvatarPicture extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           width: this.borderWidth,
-          color: Colors.lightBlueAccent,
+          color: Colors.black12,
         ),
         shape: BoxShape.circle,
         image: DecorationImage(
