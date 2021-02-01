@@ -1,6 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:graduation_project_2/classes/UserType.dart';
+import 'package:graduation_project_2/constants.dart';
+
 class Course {
   String courseName;
   int courseID;
+  List<UserType> teachers = new List<UserType>();
   Course(this.courseID, this.courseName);
 
   @override
@@ -9,7 +14,19 @@ class Course {
     return '${courseName[0].toUpperCase()}${courseName.substring(1)}';
   }
 
-  int getCourseID(){
+  int getCourseID() {
     return courseID;
+  }
+
+  Future<void> getTeachers() async {
+    Map<String, dynamic> data = {'course_id': this.courseID};
+
+    dynamic result = await invokeAPI('retrieve_teachersFromCourses', data);
+
+    this.teachers.clear();
+    Map<String, dynamic> courseTeachers = result['Teachers'];
+    courseTeachers.forEach((k, v) {
+      this.teachers.add(UserType().setUserInformation(v));
+    });
   }
 }

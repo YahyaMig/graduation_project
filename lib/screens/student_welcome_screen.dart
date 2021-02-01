@@ -9,9 +9,7 @@ class StudentWelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawer(
-        child: StudentDrawer()
-      ),
+      drawer: Drawer(child: StudentDrawer()),
       body: SafeArea(
         child: Column(
           children: <Widget>[

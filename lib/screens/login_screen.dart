@@ -5,7 +5,7 @@ import 'package:graduation_project_2/components/background.dart';
 import 'package:graduation_project_2/components/custome_text_field.dart';
 import 'package:graduation_project_2/constants.dart';
 import 'package:graduation_project_2/screens/registration_screen.dart';
-import 'package:graduation_project_2/screens/student_welcome_screen.dart';
+import 'package:graduation_project_2/screens/student_appointment_screen.dart';
 import 'package:graduation_project_2/screens/teacher_job_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (LoginScreen.isStudent)
         Navigator.pushNamedAndRemoveUntil(
-            context, StudentWelcomeScreen.id, (route) => false);
+            context, StudentAppointmentScreen.id, (route) => false);
       else
         Navigator.pushNamedAndRemoveUntil(
             context, TeacherJobScreen.id, (route) => false);
@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         dynamic _user;
         if (email != null && _password != null) {
-          dynamic _user = await _auth.signInWithEmailAndPassword(
+          _user = await _auth.signInWithEmailAndPassword(
               email: email, password: _password);
           if (_user != null) {
             goNextScreen();

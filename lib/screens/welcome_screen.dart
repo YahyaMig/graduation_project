@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project_2/components/background.dart';
 import 'package:graduation_project_2/screens/login_screen.dart';
 import 'package:graduation_project_2/screens/registration_screen.dart';
-import '../constants.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String id = 'welcome_screen';

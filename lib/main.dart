@@ -8,8 +8,10 @@ import 'package:graduation_project_2/screens/course_screen.dart';
 import 'package:graduation_project_2/screens/login_screen.dart';
 import 'package:graduation_project_2/screens/registration_screen.dart';
 import 'package:graduation_project_2/screens/settings_screen.dart';
+import 'package:graduation_project_2/screens/student_appointment_screen.dart';
 import 'package:graduation_project_2/screens/student_welcome_screen.dart';
 import 'package:graduation_project_2/screens/teacher_job_screen.dart';
+import 'package:graduation_project_2/screens/teachers_screen.dart';
 import 'package:graduation_project_2/screens/user_profile.dart';
 import 'package:graduation_project_2/screens/welcome_screen.dart';
 import 'package:graduation_project_2/screens/add_course.dart';
@@ -44,6 +46,8 @@ class MyApp extends StatelessWidget {
         AppointmentScreen.id: (context) => AppointmentScreen(),
         ClientProfile.id: (context) => ClientProfile(),
         AddLinkScreen.id: (context) => AddLinkScreen(),
+        StudentAppointmentScreen.id: (context) => StudentAppointmentScreen(),
+        TeachersScreen.id: (context) => TeachersScreen()
       },
     );
   }

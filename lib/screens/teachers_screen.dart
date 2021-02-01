@@ -1,71 +1,48 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduation_project_2/components/background.dart';
-import 'package:graduation_project_2/components/drawer_layout.dart';
 import 'package:graduation_project_2/components/avatar_image.dart';
-import 'package:graduation_project_2/components/student_drawer.dart';
+import 'package:graduation_project_2/components/background.dart';
+import 'package:graduation_project_2/constants.dart';
 import 'package:graduation_project_2/screens/client_profile.dart';
-import 'package:graduation_project_2/screens/login_screen.dart';
-import '../constants.dart';
+import 'package:graduation_project_2/screens/select_course_screen.dart';
 
-class TeacherJobScreen extends StatefulWidget {
-  static String id = 'teacher_job_screen';
-
+class TeachersScreen extends StatefulWidget {
+  static String id = 'Teacher_screen';
   @override
-  _TeacherJobScreenState createState() => _TeacherJobScreenState();
+  _TeachersScreenState createState() => _TeachersScreenState();
 }
 
-class _TeacherJobScreenState extends State<TeacherJobScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
+class _TeachersScreenState extends State<TeachersScreen> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    kUser.getAppointments();
+    availableCourses[SelectCourse.selectIndex].getTeachers();
+    print(availableCourses[SelectCourse.selectIndex].teachers[0].fName);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      drawer: Drawer(
-        child: LoginScreen.isStudent? StudentDrawer() : DrawerLayout(),
-      ),
+      appBar: AppBar(title: Text('Teachers for this course')),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Background(
             mainImage: true,
             top2Image: true,
             child: Stack(
-              children: [
-                Positioned(
-                  top: 15.0,
-                  left: 15.0,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.menu,
-                      color: Colors.black,
-                    ),
-                    onPressed: () => _scaffoldKey.currentState.openDrawer(),
-                  ),
-                ),
-                Positioned(
-                  top: 40.0,
-                  left: 160.0,
-                  child: Text(
-                    'JOBS',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                ),
+              children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 90.0),
+                  padding: const EdgeInsets.only(top: 10.0),
                   child: ListView.builder(
-                    itemCount: kUser.appointments.length,
+                    itemCount: availableCourses[SelectCourse.selectIndex]
+                        .teachers
+                        .length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          setClientProfile(kUser.appointments[index].user);
+                          setClientProfile(
+                              availableCourses[SelectCourse.selectIndex]
+                                  .teachers[index]);
                           Navigator.pushNamed(context, ClientProfile.id);
                         },
                         child: Card(
@@ -86,27 +63,30 @@ class _TeacherJobScreenState extends State<TeacherJobScreen> {
                                 left: 120.0,
                                 top: 30,
                                 child: Text(
-                                  kUser.appointments[index].getName(),
+                                  availableCourses[SelectCourse.selectIndex]
+                                          .teachers[index]
+                                          .fName
+                                          .toString() ??
+                                      'null',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              Positioned(
-                                left: 120.0,
-                                bottom: 37,
-                                child: Text(
-                                  'Time ${kUser.appointments[index].timeFrom}:00 - ${kUser.appointments[index].timeTo}:00',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
+                              // Positioned(
+                              //   left: 120.0,
+                              //   bottom: 37,
+                              //   child: Text(
+                              //     'Time ${availableCourses[SelectCourse.selectIndex].teachers[index].appointments[index].timeFrom}:00 - ${availableCourses[SelectCourse.selectIndex].teachers[index].appointments[index].timeTo}:00' ?? 'null',
+                              //     style: TextStyle(fontWeight: FontWeight.bold),
+                              //   ),
+                              // ),
                               Positioned(
                                 left: 120.0,
                                 bottom: 10,
                                 child: Text(
-                                  'AT ${kUser.appointments[index].location}',
+                                  'AT ${availableCourses[SelectCourse.selectIndex].teachers[index].gender.toString()}',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
-
                               Positioned(
                                 right: 30.0,
                                 bottom: 60,
@@ -115,15 +95,14 @@ class _TeacherJobScreenState extends State<TeacherJobScreen> {
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
-
-                              Positioned(
-                                right: 30.0,
-                                bottom: 30,
-                                child: Text(
-                                  '0${kUser.appointments[index].user.phoneNumber}',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
+                              // Positioned(
+                              //   right: 30.0,
+                              //   bottom: 30,
+                              //   child: Text(
+                              //     '0${availableCourses[SelectCourse.selectIndex].teachers[SelectCourse.selectIndex].appointments[SelectCourse.selectIndex].user.phoneNumber}',
+                              //     style: TextStyle(fontWeight: FontWeight.bold),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),

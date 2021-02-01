@@ -1,11 +1,11 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project_2/classes/appoitment.dart';
 import 'package:graduation_project_2/classes/course.dart';
 import 'package:graduation_project_2/classes/multi_media.dart';
 import 'package:graduation_project_2/components/alert_dialog.dart';
 import 'package:graduation_project_2/constants.dart';
+import 'package:graduation_project_2/screens/login_screen.dart';
 import 'package:password_strength/password_strength.dart';
 import 'package:intl/intl.dart';
 
@@ -137,11 +137,13 @@ class UserType {
     this.gender = gender ? true : false;
     this.userID = userID;
 
-    this.getAppointments();
+    LoginScreen.isStudent ? getStudentAppointments() : this.getAppointments();
   }
 
   UserType setUserInformation(dynamic information) {
-    dynamic data = information['data'];
+    print('im at info');
+    print(information);
+    Map<String, dynamic> data = information['data'];
 
     String fullName = data['FullName'];
     int userID = data['user_id'];
@@ -157,9 +159,13 @@ class UserType {
     this.email = userEmail;
     this.gender = userGender == 1 ? true : false;
 
-    Map<String, dynamic> courses = information['courses'];
-    courses.forEach(
-        (k, v) => this.courses.add(Course(v['courseID'], v['courseName'])));
+    print(this.fName);
+
+    if (data.containsKey(courses)) {
+      Map<String, dynamic> courses = information['courses'];
+      courses.forEach(
+          (k, v) => this.courses.add(Course(v['courseID'], v['courseName'])));
+    }
 
     return this;
   }
@@ -190,16 +196,41 @@ class UserType {
   }
 
   void setLinks() async {
+    print('im at set links');
+
     Map<String, dynamic> data = {"user_id": this.userID};
     dynamic response = await invokeAPI('retrieve_link', data);
+    print(response);
 
     if (response['status_code'] == 200) {
       if (response['links']['youtube'] != null)
         this.multiMediaLinks.youtubeLink = response['links']['youtube'];
 
-      if (response['links']['dropbox'] != null)
+      if (response['links']['link2'] != null)
         this.multiMediaLinks.dropboxLink = response['links']['dropbox'];
     } else
       print('Something went wrong');
+  }
+
+  void getStudentAppointments() async {
+    Map<String, dynamic> data = {"student_id": this.userID};
+
+    dynamic information =
+        await invokeAPI('retrevie_appointments_by_student_id', data);
+
+    Map<String, dynamic> appointments = information['appointment_inforamtion'];
+
+    this.appointments.clear();
+    if (appointments != null) {
+      appointments.forEach((k, v) {
+        this.appointments.add(Appointment(
+            appointmentID: v['appointmentID'],
+            studentID: v['studentID'],
+            teacherID: v['teacherID'],
+            timeFrom: v['timeFrom'],
+            timeTo: v['timeTo'],
+            location: v['location']));
+      });
+    }
   }
 }

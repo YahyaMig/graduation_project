@@ -7,7 +7,6 @@ import 'package:graduation_project_2/screens/settings_screen.dart';
 import 'package:graduation_project_2/screens/teacher_job_screen.dart';
 import 'package:graduation_project_2/screens/user_profile.dart';
 import 'package:graduation_project_2/screens/add_course.dart';
-import 'package:graduation_project_2/screens/welcome_screen.dart';
 import 'avatar_image.dart';
 import 'custom_card.dart';
 

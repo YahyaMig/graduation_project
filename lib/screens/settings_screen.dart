@@ -6,6 +6,7 @@ import 'package:graduation_project_2/components/drawer_layout.dart';
 import 'package:graduation_project_2/components/student_drawer.dart';
 import 'package:graduation_project_2/screens/add_links_screen.dart';
 import 'package:graduation_project_2/screens/change_password_screen.dart';
+import 'package:graduation_project_2/screens/login_screen.dart';
 import 'package:graduation_project_2/screens/welcome_screen.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -20,13 +21,13 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: Drawer(
-        child: WelcomeScreen.isStudent ? StudentDrawer() : DrawerLayout(),
-      ),
-      body: SafeArea(
-        child: Background(
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawer: Drawer(
+          child: LoginScreen.isStudent ? StudentDrawer() : DrawerLayout(),
+        ),
+        body: Background(
           mainImage: true,
           top2Image: true,
           child: Column(

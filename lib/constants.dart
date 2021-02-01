@@ -10,13 +10,14 @@ const String apiLink =
     'https://wkn2rme5hi.execute-api.us-east-1.amazonaws.com/test';
 int departmentID = 0;
 UserType kUser;
-List availableCourses;
+List <Course> availableCourses;
 UserType clientProfile;
 
 void setClientProfile(UserType client) {
   clientProfile = client;
 }
 
+// ignore: missing_return
 TimeOfDay getTime(TimeOfDay time, context) {
   if (time == null) {
     showAlertDialog(
@@ -25,7 +26,7 @@ TimeOfDay getTime(TimeOfDay time, context) {
     return TimeOfDay(hour: time.hour + 1, minute: time.minute);
 }
 
-Future<void> getAvailableCourses(int departmentID) async {
+void getAvailableCourses(int departmentID) async {
   availableCourses = new List<Course>();
 
   Map<String, int> data = {"department_id": departmentID};
@@ -62,6 +63,7 @@ void setUserInformation(dynamic information) {
   courses.forEach(
       (k, v) => kUser.courses.add(Course(v['courseID'], v['courseName'])));
 
+  print(kUser);
   kUser.setLinks();
 }
 
