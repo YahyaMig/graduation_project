@@ -15,7 +15,6 @@ void registerNewUser(
           email: kUser.email, password: kUser.password);
 
       if (newUser != null) {
-        print(kUser.toJson());
         dynamic result = await invokeAPI('add_user', kUser.toJson());
         if (result['status_code'] == 200){
           Navigator.pushNamed(context, LoginScreen.id);

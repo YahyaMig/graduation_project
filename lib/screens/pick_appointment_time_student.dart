@@ -1,22 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:graduation_project_2/components/alert_dialog.dart';
 import 'package:graduation_project_2/components/background.dart';
 import 'package:graduation_project_2/components/custome_text_field.dart';
-import 'package:graduation_project_2/components/drawer_layout.dart';
 import 'package:time_picker_widget/time_picker_widget.dart';
 
 import '../constants.dart';
 
-class AppointmentScreen extends StatefulWidget {
-  static String id = 'Appointment screen';
+class PickAppointmentTime extends StatefulWidget {
+  static String id = 'pick appointment time';
   @override
-  _AppointmentScreenState createState() => _AppointmentScreenState();
+  _PickAppointmentTimeState createState() => _PickAppointmentTimeState();
 }
 
-class _AppointmentScreenState extends State<AppointmentScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
+class _PickAppointmentTimeState extends State<PickAppointmentTime> {
   TimeOfDay _fromSelectedHour;
   String _fromDefValue = 'Select Hour';
   TimeOfDay _toSelectedHour;
@@ -29,27 +26,12 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
     return SafeArea(
       child: Scaffold(
-        key: _scaffoldKey,
-        drawer: Drawer(
-          child: DrawerLayout(),
-        ),
         body: SingleChildScrollView(
           child: Background(
             mainImage: true,
             top2Image: true,
             child: Stack(
               children: <Widget>[
-                Positioned(
-                  top: 15.0,
-                  left: 15.0,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.menu,
-                      color: Colors.black,
-                    ),
-                    onPressed: () => _scaffoldKey.currentState.openDrawer(),
-                  ),
-                ),
                 Column(
                   children: <Widget>[
                     Center(
@@ -57,7 +39,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         margin: EdgeInsets.only(top: 20.0),
                         padding: EdgeInsets.all(20.0),
                         child: Text(
-                          'Get Hired!',
+                          'Pick your appointment',
                           style: TextStyle(
                               fontSize: 25.0,
                               fontWeight: FontWeight.bold,
@@ -87,65 +69,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'Status',
-                                  style: TextStyle(
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Radio(
-                                        value: true,
-                                        groupValue: kUser.isActive,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            kUser.isActive = value;
-                                          });
-                                        }),
-                                    Text(
-                                      'Available',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Radio(
-                                      value: false,
-                                      groupValue: kUser.isActive,
-                                      onChanged: (value) async {
-                                        setState(
-                                          () {
-                                            kUser.isActive = false;
-                                          },
-                                        );
-                                        dynamic activeResult = await invokeAPI(
-                                          'change_status',
-                                          {
-                                            'status': kUser.isActive ? 2 : 1,
-                                            'user_id': kUser.userID
-                                          },
-                                        );
-                                      },
-                                    ),
-                                    Text(
-                                      'Not Available',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
                           ),
                           SizedBox(
                             height: 40.0,
@@ -153,7 +76,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           Container(
                             padding: EdgeInsets.all(5.0),
                             child: Text(
-                              'Select your availability hours for today!',
+                              'Select appointment time',
                               style: TextStyle(
                                   fontSize: 18.0, fontWeight: FontWeight.bold),
                             ),
@@ -179,29 +102,23 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                 ),
                                 Container(
                                   child: FlatButton(
-                                    onPressed: kUser.isActive
-                                        ? () async {
-                                            showCustomTimePicker(
-                                                context: context,
-                                                // It is a must if you provide selectableTimePredicate
-                                                onFailValidation: (context) =>
-                                                    print(
-                                                        'Unavailable selection'),
-                                                initialTime: TimeOfDay(
-                                                    hour: 9, minute: 0),
-                                                selectableTimePredicate:
-                                                    (time) =>
-                                                        time.hour >= 9 &&
-                                                        time.hour < 17 &&
-                                                        time.minute % 100 ==
-                                                            0).then((time) =>
-                                                setState(() =>
-                                                    _fromSelectedHour = time));
-                                          }
-                                        : () {
-                                            showAlertDialog(context, 'Status',
-                                                'Make sure your status is active');
-                                          },
+                                    onPressed: () async {
+                                      print(selectedTimeFrom);
+                                      showCustomTimePicker(
+                                          context: context,
+                                          // It is a must if you provide selectableTimePredicate
+                                          onFailValidation: (context) =>
+                                              print('Unavailable selection'),
+                                          initialTime: TimeOfDay(
+                                              hour: selectedTimeFrom,
+                                              minute: 0),
+                                          selectableTimePredicate: (time) =>
+                                              time.hour >= 9 &&
+                                              time.hour < selectedTimeTo &&
+                                              time.minute % 100 == 0).then(
+                                          (time) => setState(
+                                              () => _fromSelectedHour = time));
+                                    },
                                     child: Container(
                                         child: Row(
                                       children: [
@@ -222,42 +139,42 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                 ),
                                 Container(
                                   child: FlatButton(
-                                    onPressed:
-                                        kUser.isActive &&
-                                                _fromSelectedHour != null
-                                            ? () async {
-                                                showCustomTimePicker(
-                                                    context: context,
-                                                    // It is a must if you provide selectableTimePredicate
-                                                    onFailValidation:
-                                                        (context) => print(
-                                                            'Unavailable selection'),
-                                                    initialTime: getTime(
-                                                        _fromSelectedHour,
-                                                        context),
-                                                    selectableTimePredicate: (time) =>
-                                                        time.hour >=
-                                                            getTime(_fromSelectedHour,
-                                                                    context)
+                                    onPressed: _fromSelectedHour != null
+                                        ? () async {
+                                            showCustomTimePicker(
+                                                context: context,
+                                                // It is a must if you provide selectableTimePredicate
+                                                onFailValidation: (context) =>
+                                                    print(
+                                                        'Unavailable selection'),
+                                                initialTime: TimeOfDay(
+                                                    hour: selectedTimeTo,
+                                                    minute: 0),
+                                                selectableTimePredicate:
+                                                    (time) =>
+                                                        time.hour >
+                                                            _fromSelectedHour
                                                                 .hour &&
-                                                        time.hour < 17 &&
+                                                        time.hour <=
+                                                            selectedTimeTo &&
                                                         time.minute % 100 ==
                                                             0).then((time) =>
-                                                    setState(() => _toSelectedHour = time));
+                                                setState(() =>
+                                                    _toSelectedHour = time));
+                                          }
+                                        : _fromSelectedHour == null
+                                            ? () {
+                                                showAlertDialog(
+                                                    context,
+                                                    'Picking Error',
+                                                    "Make sure to pick when you going to start!");
                                               }
-                                            : _fromSelectedHour == null
-                                                ? () {
-                                                    showAlertDialog(
-                                                        context,
-                                                        'Picking Error',
-                                                        "Make sure to pick when you going to start!");
-                                                  }
-                                                : () {
-                                                    showAlertDialog(
-                                                        context,
-                                                        'Status',
-                                                        'Make sure your status is available');
-                                                  },
+                                            : () {
+                                                showAlertDialog(
+                                                    context,
+                                                    'Status',
+                                                    'Make sure your status is available');
+                                              },
                                     child: Container(
                                         child: Row(
                                       children: [
@@ -280,12 +197,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
-                            child: kTextField(
-                              onChanged: (value) {
-                                _location = value;
-                              },
-                              hintText: 'Enter location',
-                            ),
                           ),
                           SizedBox(
                             height: 10.0,
@@ -294,33 +205,25 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                             padding: EdgeInsets.all(20),
                             alignment: Alignment.center,
                             child: RaisedButton(
-                              onPressed: kUser.isActive &&
-                                      _fromSelectedHour != null &&
-                                      _toSelectedHour != null &&
-                                      _location != null
+                              onPressed: _fromSelectedHour != null &&
+                                      _toSelectedHour != null
                                   ? () async {
+                                      print(selectedLocation);
                                       Map<String, dynamic> data = {
-                                        "teacher_id": kUser.userID,
-                                        "time_from": (_fromSelectedHour.hour),
+                                        "teacher_id": teacherID,
+                                        "student_id":kUser.userID,
+                                        "time_from": _fromSelectedHour.hour,
                                         "time_to": _toSelectedHour.hour,
-                                        "location": _location
+                                        "location": selectedLocation
                                       };
 
                                       dynamic result = await invokeAPI(
-                                          'make_schedule', data);
+                                          'make_appointment', data);
+                                      print(result);
 
-                                      dynamic activeResult = await invokeAPI(
-                                        'change_status',
-                                        {
-                                          'status': kUser.isActive ? 2 : 1,
-                                          'user_id': kUser.userID
-                                        },
-                                      );
-
-                                      if (result['status_code'] == 200 &&
-                                          activeResult['status_code'] == 200) {
+                                      if (result['status_code'] == 200) {
                                         showAlertDialog(context, 'Success!',
-                                            'Wait students to hire you!');
+                                            'Done! please contact the teacher to meet up!');
                                       } else
                                         showAlertDialog(context, 'Error!',
                                             'Something went wrong!');

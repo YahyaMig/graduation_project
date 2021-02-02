@@ -38,6 +38,7 @@ class DrawerLayout extends StatelessWidget {
                   width: 250.0,
                   child: Column(
                     children: <Widget>[
+
                       AvatarPicture(
                         imagePath: 'images/avatar1.jpg',
                         borderWidth: 1.0,

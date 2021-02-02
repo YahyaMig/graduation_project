@@ -7,7 +7,6 @@ import 'package:graduation_project_2/components/student_drawer.dart';
 import 'package:graduation_project_2/screens/add_links_screen.dart';
 import 'package:graduation_project_2/screens/change_password_screen.dart';
 import 'package:graduation_project_2/screens/login_screen.dart';
-import 'package:graduation_project_2/screens/welcome_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   static String id = 'setting_screen';

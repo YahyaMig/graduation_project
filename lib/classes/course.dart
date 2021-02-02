@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:graduation_project_2/classes/UserType.dart';
 import 'package:graduation_project_2/constants.dart';
 
@@ -18,7 +17,7 @@ class Course {
     return courseID;
   }
 
-  Future<void> getTeachers() async {
+  Future<List<Course>> getTeachers() async {
     Map<String, dynamic> data = {'course_id': this.courseID};
 
     dynamic result = await invokeAPI('retrieve_teachersFromCourses', data);
@@ -28,5 +27,8 @@ class Course {
     courseTeachers.forEach((k, v) {
       this.teachers.add(UserType().setUserInformation(v));
     });
+
+
+    return availableCourses;
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:graduation_project_2/classes/UserType.dart';
 import 'package:graduation_project_2/constants.dart';
 import 'package:graduation_project_2/screens/login_screen.dart';
@@ -10,7 +9,9 @@ class Appointment {
   int timeFrom;
   int timeTo;
   String location;
-  UserType user;
+  UserType user = new UserType();
+  String name;
+
 
   Appointment(
       {this.appointmentID,
@@ -23,25 +24,17 @@ class Appointment {
   }
 
   void getUser() async {
-
-    user = new UserType();
-
     Map<String, int> data = {
       "user_id": LoginScreen.isStudent ? teacherID : studentID
     };
 
     dynamic information = await invokeAPI('retrieve_user_byID', data);
-
-    user.setUserInformation(information);
+    this.user.setUserInformation(information);
+    this.name = this.user.fName;
   }
 
-  String getName(){
-    return user.getName();
+  String getName() {
+    return this.name;
   }
 
-  void stayUpdated(){
-    TimeOfDay time = TimeOfDay.now();
-    print(time.hour.toString());
-
-  }
 }

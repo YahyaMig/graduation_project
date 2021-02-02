@@ -4,6 +4,8 @@ import 'package:graduation_project_2/components/background.dart';
 import 'package:graduation_project_2/constants.dart';
 import 'package:graduation_project_2/screens/client_profile.dart';
 import 'package:graduation_project_2/screens/select_course_screen.dart';
+import 'package:graduation_project_2/screens/pick_appointment_time_student.dart';
+import 'package:graduation_project_2/components/custom_card.dart';
 
 class TeachersScreen extends StatefulWidget {
   static String id = 'Teacher_screen';
@@ -17,7 +19,6 @@ class _TeachersScreenState extends State<TeachersScreen> {
     // TODO: implement initState
     super.initState();
     availableCourses[SelectCourse.selectIndex].getTeachers();
-    print(availableCourses[SelectCourse.selectIndex].teachers[0].fName);
   }
 
   @override
@@ -38,12 +39,36 @@ class _TeachersScreenState extends State<TeachersScreen> {
                         .teachers
                         .length,
                     itemBuilder: (context, index) {
+                      availableCourses[SelectCourse.selectIndex]
+                          .teachers[index]
+                          .getTeacherAvailableTime();
                       return GestureDetector(
                         onTap: () {
                           setClientProfile(
                               availableCourses[SelectCourse.selectIndex]
                                   .teachers[index]);
-                          Navigator.pushNamed(context, ClientProfile.id);
+
+                          selectedTimeFrom =
+                              availableCourses[SelectCourse.selectIndex]
+                                  .teachers[index]
+                                  .availableTime
+                                  .timeFrom;
+                          selectedTimeTo =
+                              availableCourses[SelectCourse.selectIndex]
+                                  .teachers[index]
+                                  .availableTime
+                                  .timeTo;
+                          studentID = kUser.userID;
+                          teacherID = availableCourses[SelectCourse.selectIndex]
+                              .teachers[index]
+                              .userID;
+                          selectedLocation =
+                              availableCourses[SelectCourse.selectIndex]
+                                  .teachers[index]
+                                  .availableTime
+                                  .location;
+
+                          Navigator.pushNamed(context, PickAppointmentTime.id);
                         },
                         child: Card(
                           elevation: 25,
@@ -61,7 +86,7 @@ class _TeachersScreenState extends State<TeachersScreen> {
                               ),
                               Positioned(
                                 left: 120.0,
-                                top: 30,
+                                top: 20,
                                 child: Text(
                                   availableCourses[SelectCourse.selectIndex]
                                           .teachers[index]
@@ -71,38 +96,48 @@ class _TeachersScreenState extends State<TeachersScreen> {
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              // Positioned(
-                              //   left: 120.0,
-                              //   bottom: 37,
-                              //   child: Text(
-                              //     'Time ${availableCourses[SelectCourse.selectIndex].teachers[index].appointments[index].timeFrom}:00 - ${availableCourses[SelectCourse.selectIndex].teachers[index].appointments[index].timeTo}:00' ?? 'null',
-                              //     style: TextStyle(fontWeight: FontWeight.bold),
-                              //   ),
-                              // ),
                               Positioned(
                                 left: 120.0,
-                                bottom: 10,
+                                bottom: 47,
                                 child: Text(
-                                  'AT ${availableCourses[SelectCourse.selectIndex].teachers[index].gender.toString()}',
+                                  'Available from ${availableCourses[SelectCourse.selectIndex].teachers[index].availableTime.timeFrom.toString()}:00 - ${availableCourses[SelectCourse.selectIndex].teachers[index].availableTime.timeTo.toString()}:00',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12.5),
+                                ),
+                              ),
+                              Positioned(
+                                left: 120.0,
+                                bottom: 20,
+                                child: Text(
+                                  'AT ${availableCourses[SelectCourse.selectIndex].teachers[index].availableTime.location}',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Positioned(
-                                right: 30.0,
-                                bottom: 60,
-                                child: Text(
-                                  'Contact me!',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                right: 20.0,
+                                top: 37.0,
+                                child: GestureDetector(
+                                  onTap: () => Navigator.pushNamed(
+                                      context, ClientProfile.id),
+                                  child: Container(
+                                    height: 65,
+                                    width: 70,
+                                    child: CustomCard(
+                                      elevation: 30.0,
+                                      color: Colors.white24,
+                                      shadowColor: Colors.white54,
+                                      borderRadius: 10,
+                                      child: Column(
+                                        children: <Widget>[
+                                          Icon(Icons.person_outlined),
+                                          Text('Profile')
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              // Positioned(
-                              //   right: 30.0,
-                              //   bottom: 30,
-                              //   child: Text(
-                              //     '0${availableCourses[SelectCourse.selectIndex].teachers[SelectCourse.selectIndex].appointments[SelectCourse.selectIndex].user.phoneNumber}',
-                              //     style: TextStyle(fontWeight: FontWeight.bold),
-                              //   ),
-                              // ),
+                              )
                             ],
                           ),
                         ),

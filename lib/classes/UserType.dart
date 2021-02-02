@@ -8,6 +8,7 @@ import 'package:graduation_project_2/constants.dart';
 import 'package:graduation_project_2/screens/login_screen.dart';
 import 'package:password_strength/password_strength.dart';
 import 'package:intl/intl.dart';
+import 'available_appointment.dart';
 
 class UserType {
   String fName = '';
@@ -28,9 +29,11 @@ class UserType {
   bool isStudent;
   bool isActive = false;
   int phoneNumber = 0;
+  int timeFrom;
+  int timeTo;
   List<Course> courses = new List<Course>();
   List<Appointment> appointments = new List<Appointment>();
-
+  AvailableAppointment availableTime = new AvailableAppointment();
   UserType(
       {this.fName,
       this.email,
@@ -39,6 +42,7 @@ class UserType {
       this.gender,
       this.userID}) {
     multiMediaLinks = new MultiMedia();
+    this.getAppointments();
   }
 
   String getAddress() {
@@ -81,8 +85,6 @@ class UserType {
   }
 
   bool isAdult(BuildContext context) {
-    print(dateOfBirth);
-
     String datePattern = "dd-MM-yyyy";
 
     DateTime birthDate = DateFormat(datePattern).parse(dateOfBirth.toString());
@@ -141,8 +143,6 @@ class UserType {
   }
 
   UserType setUserInformation(dynamic information) {
-    print('im at info');
-    print(information);
     Map<String, dynamic> data = information['data'];
 
     String fullName = data['FullName'];
@@ -159,8 +159,6 @@ class UserType {
     this.email = userEmail;
     this.gender = userGender == 1 ? true : false;
 
-    print(this.fName);
-
     if (data.containsKey(courses)) {
       Map<String, dynamic> courses = information['courses'];
       courses.forEach(
@@ -175,6 +173,7 @@ class UserType {
   }
 
   void getAppointments() async {
+    print('im at appointments');
     Map<String, dynamic> data = {"teacher_id": this.userID};
 
     dynamic information = await invokeAPI('retrieve_appointment', data);
@@ -195,12 +194,13 @@ class UserType {
     }
   }
 
-  void setLinks() async {
-    print('im at set links');
+  Future<List<Appointment>> getAllAppointments() async {
+    return this.appointments;
+  }
 
+  void setLinks() async {
     Map<String, dynamic> data = {"user_id": this.userID};
     dynamic response = await invokeAPI('retrieve_link', data);
-    print(response);
 
     if (response['status_code'] == 200) {
       if (response['links']['youtube'] != null)
@@ -232,5 +232,19 @@ class UserType {
             location: v['location']));
       });
     }
+  }
+
+  void getTeacherAvailableTime() async {
+    Map<String, dynamic> data = {"teacher_id": this.userID};
+    dynamic information = await invokeAPI('get_availbleTime', data);
+    dynamic temp = information['AvailbleTime_information'];
+
+    print(information);
+    this.availableTime.timeFrom = temp['timeFrom'];
+    this.availableTime.timeTo = temp['timeTo'];
+    this.availableTime.location = temp['location'];
+    this.availableTime.appointmentID = temp['appointment_id'];
+
+    print(temp['timeFrom']);
   }
 }

@@ -34,7 +34,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       dynamic information = await invokeAPI('retrieve_user', data);
 
-      print(information);
       setUserInformation(information);
 
       if (LoginScreen.isStudent)

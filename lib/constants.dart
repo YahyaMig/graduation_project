@@ -13,6 +13,13 @@ UserType kUser;
 List <Course> availableCourses;
 UserType clientProfile;
 
+int selectedTimeFrom;
+int selectedTimeTo;
+String selectedLocation;
+int studentID;
+int teacherID;
+
+
 void setClientProfile(UserType client) {
   clientProfile = client;
 }
@@ -63,7 +70,6 @@ void setUserInformation(dynamic information) {
   courses.forEach(
       (k, v) => kUser.courses.add(Course(v['courseID'], v['courseName'])));
 
-  print(kUser);
   kUser.setLinks();
 }
 

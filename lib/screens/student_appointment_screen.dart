@@ -5,7 +5,7 @@ import 'package:graduation_project_2/components/drawer_layout.dart';
 import 'package:graduation_project_2/components/student_drawer.dart';
 import 'package:graduation_project_2/screens/client_profile.dart';
 import 'package:graduation_project_2/screens/login_screen.dart';
-
+import 'dart:async';
 import '../constants.dart';
 
 class StudentAppointmentScreen extends StatefulWidget {
@@ -17,12 +17,19 @@ class StudentAppointmentScreen extends StatefulWidget {
 
 class _StudentAppointmentScreenState extends State<StudentAppointmentScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  String now;
+  Timer everySecond;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     kUser.getStudentAppointments();
+    // everySecond = Timer.periodic(Duration(seconds: 3), (Timer t) {
+    //   setState(() {
+    //     now = DateTime.now().second.toString();
+    //   });
+    // });
   }
 
   @override
@@ -53,10 +60,11 @@ class _StudentAppointmentScreenState extends State<StudentAppointmentScreen> {
                   ),
                   Positioned(
                     top: 50.0,
-                    left:90.0,
+                    left: 90.0,
                     child: Text(
                       'Your Appointments',
-                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
@@ -87,8 +95,9 @@ class _StudentAppointmentScreenState extends State<StudentAppointmentScreen> {
                                   left: 120.0,
                                   top: 30,
                                   child: Text(
-                                    kUser.appointments[index].getName(),
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    kUser.appointments[index].name.toString(),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Positioned(
@@ -96,7 +105,8 @@ class _StudentAppointmentScreenState extends State<StudentAppointmentScreen> {
                                   bottom: 37,
                                   child: Text(
                                     'Time ${kUser.appointments[index].timeFrom}:00 - ${kUser.appointments[index].timeTo}:00',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Positioned(
@@ -104,7 +114,8 @@ class _StudentAppointmentScreenState extends State<StudentAppointmentScreen> {
                                   bottom: 10,
                                   child: Text(
                                     'AT ${kUser.appointments[index].location}',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Positioned(
@@ -112,7 +123,8 @@ class _StudentAppointmentScreenState extends State<StudentAppointmentScreen> {
                                   bottom: 60,
                                   child: Text(
                                     'Contact me!',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Positioned(
@@ -120,7 +132,8 @@ class _StudentAppointmentScreenState extends State<StudentAppointmentScreen> {
                                   bottom: 30,
                                   child: Text(
                                     '0${kUser.appointments[index].user.phoneNumber}',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],

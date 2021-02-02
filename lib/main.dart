@@ -16,6 +16,8 @@ import 'package:graduation_project_2/screens/user_profile.dart';
 import 'package:graduation_project_2/screens/welcome_screen.dart';
 import 'package:graduation_project_2/screens/add_course.dart';
 import 'package:graduation_project_2/screens/select_course_screen.dart';
+import 'package:graduation_project_2/screens/pick_appointment_time_student.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +49,8 @@ class MyApp extends StatelessWidget {
         ClientProfile.id: (context) => ClientProfile(),
         AddLinkScreen.id: (context) => AddLinkScreen(),
         StudentAppointmentScreen.id: (context) => StudentAppointmentScreen(),
-        TeachersScreen.id: (context) => TeachersScreen()
+        TeachersScreen.id: (context) => TeachersScreen(),
+        PickAppointmentTime.id: (context) => PickAppointmentTime()
       },
     );
   }

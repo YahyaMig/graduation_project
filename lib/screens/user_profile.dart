@@ -17,16 +17,6 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-
-  _launchURL() async {
-    print(kUser.multiMediaLinks.getYoutubeLink());
-    if (await canLaunch(kUser.multiMediaLinks.getYoutubeLink())) {
-      await launch(kUser.multiMediaLinks.getYoutubeLink());
-    } else {
-      throw 'Could not launch ${kUser.multiMediaLinks.getYoutubeLink()}';
-    }
-  }
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -118,8 +108,10 @@ class _UserProfileState extends State<UserProfile> {
                                   left: 10.0,
                                   bottom: 10.0,
                                   child: GestureDetector(
-                                    onTap: () {
-                                      _launchURL();
+                                    onTap: () async {
+                                      String url = kUser.multiMediaLinks
+                                          .getYoutubeLink();
+                                      await launch(url);
                                     },
                                     child: Container(
                                       height: 50.0,
