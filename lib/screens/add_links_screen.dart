@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project_2/components/alert_dialog.dart';
 import 'package:graduation_project_2/components/background.dart';
+import 'package:graduation_project_2/components/custom_card.dart';
 import 'package:graduation_project_2/components/custome_text_field.dart';
 import 'package:graduation_project_2/constants.dart';
 
@@ -38,7 +39,7 @@ class _AddLinkScreenState extends State<AddLinkScreen> {
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 20, right: 20, bottom: 10.0),
-                  child: Card(
+                  child: CustomCard(
                     child: kTextField(
                       onChanged: (value) {
                         kUser.multiMediaLinks.youtubeLink = value;
@@ -50,12 +51,24 @@ class _AddLinkScreenState extends State<AddLinkScreen> {
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
-                  child: Card(
+                  child: CustomCard(
                     child: kTextField(
                       onChanged: (value) {
                         kUser.multiMediaLinks.dropboxLink = value;
                       },
                       hintText: 'DropBox Link',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                  child: CustomCard(
+                    child: kTextField(
+                      onChanged: (value) {
+                        kUser.multiMediaLinks.zoomLink = value;
+                      },
+                      hintText: 'Zoom Link',
                     ),
                   ),
                 ),
@@ -68,6 +81,7 @@ class _AddLinkScreenState extends State<AddLinkScreen> {
                         "user_id": kUser.userID,
                         "youtube": kUser.multiMediaLinks.getYoutubeLink(),
                         "dropbox": kUser.multiMediaLinks.getDropBox(),
+                        "zoom": kUser.multiMediaLinks.getZoom(),
                       };
                       dynamic response = await invokeAPI('add_link', data);
                       if (response['status_code'] == 200) {

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project_2/components/alert_dialog.dart';
 import 'package:graduation_project_2/components/background.dart';
 import 'package:graduation_project_2/components/custome_text_field.dart';
@@ -15,6 +16,47 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
+  showAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'NOTE!!',
+            style: TextStyle(color: Colors.red),
+          ),
+          content: Text(
+              "If you change your status you will delete all your appointments!!"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("YES"),
+              onPressed: () async {
+                var result = await invokeAPI(
+                  'change_status',
+                  {'status': 1, 'user_id': kUser.userID},
+                );
+                if (result['status_code'] == 200)
+                  setState(
+                    () {
+                      kUser.isActive = false;
+                      Navigator.pop(context);
+                    },
+                  );
+              },
+            ),
+            FlatButton(
+              child: Text("CANCEL"),
+              onPressed: () {
+                //Put your code here which you want to execute on No button click.
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   TimeOfDay _fromSelectedHour;
@@ -121,18 +163,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                       value: false,
                                       groupValue: kUser.isActive,
                                       onChanged: (value) async {
-                                        setState(
-                                          () {
-                                            kUser.isActive = false;
-                                          },
-                                        );
-                                        dynamic activeResult = await invokeAPI(
-                                          'change_status',
-                                          {
-                                            'status': kUser.isActive ? 2 : 1,
-                                            'user_id': kUser.userID
-                                          },
-                                        );
+                                        showAlert(context);
                                       },
                                     ),
                                     Text(
@@ -301,7 +332,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                   ? () async {
                                       Map<String, dynamic> data = {
                                         "teacher_id": kUser.userID,
-                                        "time_from": (_fromSelectedHour.hour),
+                                        "time_from": _fromSelectedHour.hour,
                                         "time_to": _toSelectedHour.hour,
                                         "location": _location
                                       };
@@ -311,10 +342,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
                                       dynamic activeResult = await invokeAPI(
                                         'change_status',
-                                        {
-                                          'status': kUser.isActive ? 2 : 1,
-                                          'user_id': kUser.userID
-                                        },
+                                        {'status': 2, 'user_id': kUser.userID},
                                       );
 
                                       if (result['status_code'] == 200 &&

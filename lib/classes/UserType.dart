@@ -142,8 +142,12 @@ class UserType {
     LoginScreen.isStudent ? getStudentAppointments() : this.getAppointments();
   }
 
-  UserType setUserInformation(dynamic information) {
-    Map<String, dynamic> data = information['data'];
+  UserType setUserInformation(dynamic information, {bool temp = false}) {
+    Map<String, dynamic> data;
+    if (!temp)
+      data = information['data'];
+    else
+      data = information;
 
     String fullName = data['FullName'];
     int userID = data['user_id'];
@@ -181,6 +185,7 @@ class UserType {
     Map<String, dynamic> appointments = information['appointment_inforamtion'];
 
     this.appointments.clear();
+    print(appointments);
     if (appointments != null) {
       appointments.forEach((k, v) {
         this.appointments.add(Appointment(
@@ -239,12 +244,11 @@ class UserType {
     dynamic information = await invokeAPI('get_availbleTime', data);
     dynamic temp = information['AvailbleTime_information'];
 
-    print(information);
     this.availableTime.timeFrom = temp['timeFrom'];
     this.availableTime.timeTo = temp['timeTo'];
     this.availableTime.location = temp['location'];
     this.availableTime.appointmentID = temp['appointment_id'];
 
-    print(temp['timeFrom']);
+    print(information);
   }
 }

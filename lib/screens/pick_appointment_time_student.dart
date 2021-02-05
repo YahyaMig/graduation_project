@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:graduation_project_2/components/alert_dialog.dart';
 import 'package:graduation_project_2/components/background.dart';
-import 'package:graduation_project_2/components/custome_text_field.dart';
 import 'package:time_picker_widget/time_picker_widget.dart';
 
 import '../constants.dart';
@@ -26,6 +25,9 @@ class _PickAppointmentTimeState extends State<PickAppointmentTime> {
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('Teachers for this course'),
+        ),
         body: SingleChildScrollView(
           child: Background(
             mainImage: true,
@@ -104,6 +106,7 @@ class _PickAppointmentTimeState extends State<PickAppointmentTime> {
                                   child: FlatButton(
                                     onPressed: () async {
                                       print(selectedTimeFrom);
+                                      print(selectedTimeTo);
                                       showCustomTimePicker(
                                           context: context,
                                           // It is a must if you provide selectableTimePredicate
@@ -113,7 +116,7 @@ class _PickAppointmentTimeState extends State<PickAppointmentTime> {
                                               hour: selectedTimeFrom,
                                               minute: 0),
                                           selectableTimePredicate: (time) =>
-                                              time.hour >= 9 &&
+                                              time.hour >= selectedTimeFrom &&
                                               time.hour < selectedTimeTo &&
                                               time.minute % 100 == 0).then(
                                           (time) => setState(
@@ -211,7 +214,7 @@ class _PickAppointmentTimeState extends State<PickAppointmentTime> {
                                       print(selectedLocation);
                                       Map<String, dynamic> data = {
                                         "teacher_id": teacherID,
-                                        "student_id":kUser.userID,
+                                        "student_id": kUser.userID,
                                         "time_from": _fromSelectedHour.hour,
                                         "time_to": _toSelectedHour.hour,
                                         "location": selectedLocation
@@ -222,8 +225,13 @@ class _PickAppointmentTimeState extends State<PickAppointmentTime> {
                                       print(result);
 
                                       if (result['status_code'] == 200) {
-                                        showAlertDialog(context, 'Success!',
-                                            'Done! please contact the teacher to meet up!');
+                                        if (result['Result'] == "meeting exists"){
+                                          showAlertDialog(context, 'Error',
+                                              'You already have a meeting at this time!');
+                                        }
+                                        else
+                                          showAlertDialog(context, 'Success!',
+                                              'Done! please contact the teacher to meet up!');
                                       } else
                                         showAlertDialog(context, 'Error!',
                                             'Something went wrong!');

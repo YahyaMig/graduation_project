@@ -5,6 +5,7 @@ import 'package:graduation_project_2/screens/appointment_screen.dart';
 import 'package:graduation_project_2/screens/change_password_screen.dart';
 import 'package:graduation_project_2/screens/client_profile.dart';
 import 'package:graduation_project_2/screens/course_screen.dart';
+import 'package:graduation_project_2/screens/delete_course_screen.dart';
 import 'package:graduation_project_2/screens/login_screen.dart';
 import 'package:graduation_project_2/screens/registration_screen.dart';
 import 'package:graduation_project_2/screens/settings_screen.dart';
@@ -17,7 +18,6 @@ import 'package:graduation_project_2/screens/welcome_screen.dart';
 import 'package:graduation_project_2/screens/add_course.dart';
 import 'package:graduation_project_2/screens/select_course_screen.dart';
 import 'package:graduation_project_2/screens/pick_appointment_time_student.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +50,8 @@ class MyApp extends StatelessWidget {
         AddLinkScreen.id: (context) => AddLinkScreen(),
         StudentAppointmentScreen.id: (context) => StudentAppointmentScreen(),
         TeachersScreen.id: (context) => TeachersScreen(),
-        PickAppointmentTime.id: (context) => PickAppointmentTime()
+        PickAppointmentTime.id: (context) => PickAppointmentTime(),
+        DeleteCourseScreen.id: (context) => DeleteCourseScreen(),
       },
     );
   }

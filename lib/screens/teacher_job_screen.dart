@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:graduation_project_2/components/alert_dialog.dart';
 import 'package:graduation_project_2/components/background.dart';
 import 'package:graduation_project_2/components/drawer_layout.dart';
 import 'package:graduation_project_2/components/avatar_image.dart';
@@ -17,6 +18,44 @@ class TeacherJobScreen extends StatefulWidget {
 }
 
 class _TeacherJobScreenState extends State<TeacherJobScreen> {
+  showAlert(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add course'),
+          content: Text("Are you sure you want to delete this appointment?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("YES"),
+              onPressed: () async {
+                Map<String, int> data = {
+                  "appointment_id": kUser.appointments[index].appointmentID,
+                  "student_id": kUser.userID
+                };
+                var information =
+                    await invokeAPI("delete _appointmentByStdID", data);
+
+                print(information);
+
+                if (information['status_code'] == 200)
+                  showAlertDialog(context, 'Appointment deleted!',
+                      'Appointment was deleted');
+              },
+            ),
+            FlatButton(
+              child: Text("CANCEL"),
+              onPressed: () {
+                //Put your code here which you want to execute on No button click.
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String now;
   Timer everySecond;
@@ -26,11 +65,12 @@ class _TeacherJobScreenState extends State<TeacherJobScreen> {
     // TODO: implement initState
     super.initState();
     kUser.getAppointments();
-    everySecond = Timer.periodic(Duration(seconds: 3), (Timer t) {
-      setState(() {
-        now = DateTime.now().second.toString();
+    if (this.mounted)
+      everySecond = Timer.periodic(Duration(seconds: 3), (Timer t) {
+        setState(() {
+          now = DateTime.now().second.toString();
+        });
       });
-    });
   }
 
   @override
@@ -89,6 +129,17 @@ class _TeacherJobScreenState extends State<TeacherJobScreen> {
                             margin: EdgeInsets.all(10.0),
                             child: Stack(
                               children: <Widget>[
+                                Positioned(
+                                  right: 10,
+                                  child: IconButton(
+                                      icon: Icon(
+                                        Icons.delete_outline,
+                                        color: Colors.black,
+                                      ),
+                                      onPressed: () {
+                                        showAlert(context, index);
+                                      }),
+                                ),
                                 AvatarPicture(
                                   imagePath: 'images/avatar1.jpg',
                                   borderWidth: 1,

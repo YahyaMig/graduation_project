@@ -10,7 +10,7 @@ const String apiLink =
     'https://wkn2rme5hi.execute-api.us-east-1.amazonaws.com/test';
 int departmentID = 0;
 UserType kUser;
-List <Course> availableCourses;
+List<Course> availableCourses;
 UserType clientProfile;
 
 int selectedTimeFrom;
@@ -19,9 +19,17 @@ String selectedLocation;
 int studentID;
 int teacherID;
 
-
-void setClientProfile(UserType client) {
+void setClientProfile(UserType client) async {
   clientProfile = client;
+  clientProfile.courses.clear();
+
+  var information = await invokeAPI(
+      'retrieve_coursesFromTeacher', {'teacher_id': clientProfile.userID});
+  Map<String, dynamic> courses = information['courses'];
+  courses.forEach((k, v) =>
+      clientProfile.courses.add(Course(v['courseID'], v['courseName'])));
+
+  clientProfile.setLinks();
 }
 
 // ignore: missing_return
@@ -37,11 +45,13 @@ void getAvailableCourses(int departmentID) async {
   availableCourses = new List<Course>();
 
   Map<String, int> data = {"department_id": departmentID};
-  dynamic information = await invokeAPI('retrieve_courses', data);
+  print(departmentID);
 
+  dynamic information = await invokeAPI('retrieve_courses', data);
   Map<String, dynamic> courses = information['courses'];
   courses.forEach(
       (k, v) => availableCourses.add(Course(v['courseID'], v['courseName'])));
+  print(courses);
 }
 
 void createUser() {

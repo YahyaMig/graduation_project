@@ -83,6 +83,7 @@ class _SelectCourseState extends State<SelectCourse> {
                 ),
               ),
               onTap: () {
+                SelectCourse.selectIndex = index;
                 LoginScreen.isStudent
                     ? Navigator.pushNamed(context, TeachersScreen.id)
                     : showAlert(context, index);

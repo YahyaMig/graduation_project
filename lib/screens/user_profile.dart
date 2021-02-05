@@ -8,6 +8,8 @@ import 'package:graduation_project_2/components/student_drawer.dart';
 import 'package:graduation_project_2/components/user_information.dart';
 import 'package:graduation_project_2/screens/login_screen.dart';
 import '../constants.dart';
+import 'package:open_url/open_url.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserProfile extends StatefulWidget {
@@ -17,6 +19,17 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+
+  void openLink(String url) async {
+    final result = await openUrl(url);
+    if (result.exitCode == 0) {
+      print("URL should be open in your browser");
+    } else {
+      print("Something went wrong (exit code = ${result.exitCode}): "
+          "${result.stderr}");
+    }
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -111,7 +124,7 @@ class _UserProfileState extends State<UserProfile> {
                                     onTap: () async {
                                       String url = kUser.multiMediaLinks
                                           .getYoutubeLink();
-                                      await launch(url);
+                                      await openLink(url);
                                     },
                                     child: Container(
                                       height: 50.0,
@@ -125,28 +138,66 @@ class _UserProfileState extends State<UserProfile> {
                                   ),
                                 ),
                                 Positioned(
+                                  left: 10.0,
+                                  bottom: 55.0,
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      String url =
+                                          kUser.multiMediaLinks.getZoom();
+                                      await openLink(url);
+                                    },
+                                    child: Container(
+                                      height: 50.0,
+                                      width: 50.0,
+                                      child: Image(
+                                        fit: BoxFit.fill,
+                                        image: AssetImage(
+                                            'assets/images/zoom.png'),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
                                   left: 75.0,
                                   bottom: 15.0,
-                                  child: Container(
-                                    height: 40.0,
-                                    width: 40.0,
-                                    child: Image(
-                                      fit: BoxFit.fill,
-                                      image: AssetImage(
-                                          'assets/images/googleDrive.png'),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      String url =
+                                          kUser.multiMediaLinks.getDropBox();
+                                      await openLink(url);
+                                    },
+                                    child: Container(
+                                      height: 40.0,
+                                      width: 40.0,
+                                      child: Image(
+                                        fit: BoxFit.fill,
+                                        image: AssetImage(
+                                            'assets/images/googleDrive.png'),
+                                      ),
                                     ),
                                   ),
                                 ),
                                 Positioned(
                                   left: 130.0,
                                   bottom: 15.0,
-                                  child: Container(
-                                    height: 45.0,
-                                    width: 45.0,
-                                    child: Image(
-                                      fit: BoxFit.fill,
-                                      image: AssetImage(
-                                          'assets/images/WhatsApp.png'),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      final link = WhatsAppUnilink(
+                                        phoneNumber:
+                                            '00962${kUser.phoneNumber}',
+                                        text:
+                                            "Hey! This is ${kUser.fName} we have a meet up!",
+                                      );
+                                      await launch('$link');
+                                    },
+                                    child: Container(
+                                      height: 45.0,
+                                      width: 45.0,
+                                      child: Image(
+                                        fit: BoxFit.fill,
+                                        image: AssetImage(
+                                            'assets/images/WhatsApp.png'),
+                                      ),
                                     ),
                                   ),
                                 ),
