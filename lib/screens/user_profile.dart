@@ -241,10 +241,10 @@ class _UserProfileState extends State<UserProfile> {
                                     text: '0${kUser.phoneNumber}',
                                     textName: 'Mobile',
                                   ),
-                                  UserInformation(
-                                    text: kUser.getAddress(),
-                                    textName: 'Address',
-                                  ),
+                                  // UserInformation(
+                                  //   text: kUser.getAddress(),
+                                  //   textName: 'Address',
+                                  // ),
                                   UserInformation(
                                     text: kUser.getCourses(),
                                     textName: 'I can teach',

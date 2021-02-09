@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduation_project_2/components/alert_dialog.dart';
 import 'package:graduation_project_2/components/background.dart';
 import 'package:graduation_project_2/components/custome_text_field.dart';
